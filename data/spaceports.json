@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ksc-ccafs",
+    "name": "Kennedy Space Center & Cape Canaveral",
+    "agency": "NASA / SpaceX / ULA",
+    "country": "United States",
+    "location": "Merritt Island, Florida",
+    "lat": 28.5721,
+    "lon": -80.6480,
+    "pads": ["LC-39A (Starship / Falcon 9)", "LC-39B (SLS / Artemis)", "SLC-40 (Falcon 9)", "SLC-41 (Vulcan Centaur)"],
+    "activeVehicles": ["Falcon 9", "Falcon Heavy", "Starship", "SLS", "Vulcan Centaur"],
+    "historicMissions": ["Apollo 11", "Space Shuttle", "Artemis I", "Crew Dragon Flights"]
+  },
+  {
+    "id": "starbase-boca",
+    "name": "Starbase Boca Chica",
+    "agency": "SpaceX",
+    "country": "United States",
+    "location": "Brownsville, Texas",
+    "lat": 25.9972,
+    "lon": -97.1561,
+    "pads": ["Orbital Launch Pad 1", "Orbital Launch Pad 2 (Constructing)"],
+    "activeVehicles": ["Starship / Super Heavy"],
+    "historicMissions": ["Integrated Flight Tests (IFT 1-5)", "Starship Orbital Demonstrations"]
+  },
+  {
+    "id": "vsfb",
+    "name": "Vandenberg Space Force Base",
+    "agency": "USSF / SpaceX / Firefly",
+    "country": "United States",
+    "location": "Lompoc, California",
+    "lat": 34.6321,
+    "lon": -120.6106,
+    "pads": ["SLC-4E (Falcon 9)", "SLC-2W (Firefly Alpha)", "SLC-6"],
+    "activeVehicles": ["Falcon 9 (Polar / SSO)", "Firefly Alpha"],
+    "historicMissions": ["Starlink Polar Orbits", "DART Mission", "Sentinel Earth Observation"]
+  },
+  {
+    "id": "sdsc-shriharikota",
+    "name": "Satish Dhawan Space Centre (SHAR)",
+    "agency": "ISRO",
+    "country": "India",
+    "location": "Sriharikota, Andhra Pradesh",
+    "lat": 13.7199,
+    "lon": 80.2305,
+    "pads": ["First Launch Pad (FLP)", "Second Launch Pad (SLP)", "Third Launch Pad (Gaganyaan)"],
+    "activeVehicles": ["LVM3 (GSLV Mk III)", "PSLV", "SSLV", "GSLV Mk II"],
+    "historicMissions": ["Chandrayaan-3 (Lunar South Pole)", "Aditya-L1 (Solar Observatory)", "Mangalyaan (Mars Orbiter)", "Gaganyaan Abort Tests"]
+  },
+  {
+    "id": "csg-kourou",
+    "name": "Guiana Space Centre (CSG)",
+    "agency": "ESA / Arianespace / CNES",
+    "country": "French Guiana (France)",
+    "location": "Kourou, French Guiana",
+    "lat": 5.2399,
+    "lon": -52.7684,
+    "pads": ["ELA-4 (Ariane 6)", "ELV (Vega-C)"],
+    "activeVehicles": ["Ariane 6", "Vega-C"],
+    "historicMissions": ["James Webb Space Telescope (Ariane 5)", "JUICE Jupiter Icy Moons", "Rosetta Comet Lander"]
+  },
+  {
+    "id": "baikonur",
+    "name": "Baikonur Cosmodrome",
+    "agency": "Roscosmos",
+    "country": "Kazakhstan",
+    "location": "Baikonur, Kyzylorda Region",
+    "lat": 45.9646,
+    "lon": 63.3052,
+    "pads": ["Site 31/6 (Soyuz-2)", "Site 200/39 (Proton-M)"],
+    "activeVehicles": ["Soyuz-2.1a", "Soyuz-2.1b", "Proton-M"],
+    "historicMissions": ["Sputnik 1 (First Satellite)", "Vostok 1 (Yuri Gagarin)", "ISS Crew Expeditions"]
+  },
+  {
+    "id": "wenchang",
+    "name": "Wenchang Space Launch Site",
+    "agency": "CNSA",
+    "country": "China",
+    "location": "Hainan Island, China",
+    "lat": 19.6145,
+    "lon": 110.9510,
+    "pads": ["LC-1 (Long March 5)", "LC-2 (Long March 7/8)", "Commercial Pad 1"],
+    "activeVehicles": ["Long March 5B", "Long March 7", "Long March 8", "Long March 12"],
+    "historicMissions": ["Tiangong Space Station Core & Modules", "Chang'e 6 Lunar Far Side Sample Return", "Tianwen-1 Mars Mission"]
+  },
+  {
+    "id": "tanegashima",
+    "name": "Tanegashima Space Center (TNSC)",
+    "agency": "JAXA",
+    "country": "Japan",
+    "location": "Kagoshima Prefecture, Japan",
+    "lat": 30.4000,
+    "lon": 130.9700,
+    "pads": ["Yoshinobu Launch Complex (H3 / H-IIA)"],
+    "activeVehicles": ["H3 Rocket", "H-IIA"],
+    "historicMissions": ["SLIM Moon Sniper Lander", "Hayabusa2 Asteroid Sample Return", "HTV ISS Cargo Spacecraft"]
+  },
+  {
+    "id": "rocket-lab-mahia",
+    "name": "Rocket Lab Launch Complex 1",
+    "agency": "Rocket Lab",
+    "country": "New Zealand",
+    "location": "Mahia Peninsula, Hawke's Bay",
+    "lat": -39.2606,
+    "lon": 177.8647,
+    "pads": ["Pad 1A", "Pad 1B"],
+    "activeVehicles": ["Electron", "Suborbital HASTE"],
+    "historicMissions": ["CAPSTONE Lunar CubeSat (NASA Artemis)", "Rapid Dedicated Commercial Deployments"]
+  },
+  {
+    "id": "wallops",
+    "name": "Wallops Flight Facility / MARS",
+    "agency": "NASA / Rocket Lab / Northrop Grumman",
+    "country": "United States",
+    "location": "Wallops Island, Virginia",
+    "lat": 37.8337,
+    "lon": -75.4831,
+    "pads": ["Pad 0A (Antares / Neutron)", "Pad 0B", "LC-2 (Electron)"],
+    "activeVehicles": ["Antares 330", "Electron", "Neutron (Developing)"],
+    "historicMissions": ["Cygnus ISS Cargo Resupply Missions", "NASA Sounding Rocket Studies"]
+  }
+]

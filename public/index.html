@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AeroVector — Real-Time Global Airspace Radar & Telemetry</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- D3 & TopoJSON -->
+  <script src="/assets/d3.min.js"></script>
+  <script src="/assets/topojson-client.min.js"></script>
+</head>
+<body>
+
+  <!-- Background Interactive Cosmos & 3D/2D Map Canvas -->
+  <div id="map-container"></div>
+
+  <!-- Top Command Bar HUD -->
+  <header class="top-command-bar">
+    <!-- Brand Badge & Live Pulsing Beacon -->
+    <div class="command-group">
+      <div class="brand-pill">
+        <span class="brand-icon">✈</span>
+        <span class="brand-title">AEROVECTOR</span>
+        <div class="live-badge">
+          <span class="pulse-dot"></span>
+          <span>LIVE</span>
+        </div>
+      </div>
+
+      <!-- Domain Mode Selector (Flights vs. Rockets & Space) -->
+      <div class="domain-mode-switch" id="domain-mode-switch">
+        <button id="tab-mode-flights" class="domain-tab active" title="Commercial & Global Airspace Radar">
+          <span>✈️ Flights</span>
+        </button>
+        <button id="tab-mode-space" class="domain-tab" title="Rocket Launches, Spaceports & Orbital ISS">
+          <span>🚀 Rockets & Space</span>
+        </button>
+        <button id="tab-mode-all" class="domain-tab" title="Unified Global Airspace & Orbital Spacecraft">
+          <span>🌐 Unified</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Center Airspace Summary & Clocks -->
+    <div class="command-group">
+      <div class="airspace-summary-pill">
+        <div class="clock-display">
+          <span>🕒</span>
+          <span id="utc-clock">00:00:00 UTC</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item">
+          <span class="metric-label" id="label-stat-primary">TRACKED</span>
+          <strong id="stat-total-global" style="color: var(--accent-cyan);">--</strong>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item">
+          <span class="metric-label" id="label-stat-secondary">IN VIEW</span>
+          <strong id="stat-visible-count" style="color: var(--text-pure);">--</strong>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item">
+          <span class="metric-label" id="label-stat-tertiary">AIRBORNE</span>
+          <strong id="stat-airborne" style="color: var(--accent-emerald);">--</strong>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item">
+          <span class="metric-label">SYNC</span>
+          <strong id="next-poll-countdown" style="color: var(--accent-cyan);">9s</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Controls: Search, View Toggles, Filters -->
+    <!-- Right Controls: Search, Projection Switcher, Tools & Cache -->
+    <div class="command-group">
+      <!-- Search Input -->
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          id="search-flight-input" 
+          class="search-input" 
+          placeholder="Search callsign, airline, rocket, spaceport..."
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <button id="btn-clear-search" class="btn-clear-search">✕</button>
+      </div>
+
+      <!-- Projection Switcher (Segmented Control) -->
+      <div class="projection-switch">
+        <button id="btn-mode-globe" class="cmd-btn active" title="3D Globe">
+          <span>🌐 3D</span>
+        </button>
+        <button id="btn-mode-2d" class="cmd-btn" title="2D Map">
+          <span>🗺️ 2D</span>
+        </button>
+      </div>
+
+      <!-- Heatmap Toggle -->
+      <button id="btn-toggle-heatmap" class="cmd-btn" title="Toggle Airspace Density Heatmap">
+        <span>🔥 Heatmap</span>
+      </button>
+
+      <!-- Advanced Airspace Filters -->
+      <button id="btn-filter-toggle" class="cmd-btn" title="Advanced Airspace Filters">
+        <span>⚙ Filters</span>
+      </button>
+
+      <!-- SQLite Route Cache Monitor -->
+      <button id="btn-cache-modal" class="cmd-btn" title="Inspect Local SQLite Flight Routes Cache">
+        <span>🗄️ Cache (<strong id="cache-badge-count" style="color: var(--accent-cyan);">0</strong>)</span>
+      </button>
+
+      <!-- Audio Feedback Toggle -->
+      <button id="btn-toggle-audio" class="cmd-btn" title="Toggle Audio Radar FX">
+        <span id="audio-icon">🔇</span>
+      </button>
+
+      <!-- Info & Legend Modal Toggle -->
+      <button id="btn-info" class="cmd-btn" title="Radar Feeds & System Legend">
+        <span>ℹ️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Secondary Airline Quick Chips Toolbar (Flights Mode) -->
+  <nav class="airline-chips-toolbar" id="airline-chips">
+    <button class="airline-chip active" data-airline="">All Global Flights</button>
+    <button class="airline-chip" data-airline="UAL">United Airlines</button>
+    <button class="airline-chip" data-airline="DAL">Delta Air Lines</button>
+    <button class="airline-chip" data-airline="AAL">American Airlines</button>
+    <button class="airline-chip" data-airline="SWA">Southwest</button>
+    <button class="airline-chip" data-airline="BAW">British Airways</button>
+    <button class="airline-chip" data-airline="DLH">Lufthansa</button>
+    <button class="airline-chip" data-airline="AFR">Air France</button>
+    <button class="airline-chip" data-airline="UAE">Emirates</button>
+    <button class="airline-chip" data-airline="QTR">Qatar Airways</button>
+    <button class="airline-chip" data-airline="SIA">Singapore Airlines</button>
+    <button class="airline-chip" data-airline="RYR">Ryanair</button>
+    <button class="airline-chip" data-airline="IGO">IndiGo</button>
+    <button class="airline-chip" data-airline="THY">Turkish Airlines</button>
+    <button class="airline-chip" data-airline="QFA">Qantas</button>
+    <button class="airline-chip" data-airline="JAL">Japan Airlines</button>
+    <button class="airline-chip" data-airline="MIL">Military Ops</button>
+  </nav>
+
+  <!-- Secondary Space & Rocket Chips Toolbar (Space Mode) -->
+  <nav class="airline-chips-toolbar space-chips-toolbar" id="space-chips" style="display: none;">
+    <button class="airline-chip active" data-agency="all">All Spaceports & Launches</button>
+    <button class="airline-chip" data-agency="SpaceX">SpaceX / Starship</button>
+    <button class="airline-chip" data-agency="NASA">NASA / Artemis</button>
+    <button class="airline-chip" data-agency="ISRO">ISRO (India)</button>
+    <button class="airline-chip" data-agency="Rocket Lab">Rocket Lab</button>
+    <button class="airline-chip" data-agency="ESA">ESA / Ariane</button>
+    <button class="airline-chip" data-agency="Roscosmos">Roscosmos</button>
+    <button class="airline-chip" data-agency="China">China CNSA</button>
+    <button class="airline-chip" data-agency="JAXA">Japan JAXA</button>
+    <button class="airline-chip" data-agency="ISS">🛰️ Live ISS Orbit</button>
+  </nav>
+
+  <!-- Emergency Transponder Alert Banner -->
+  <div id="emergency-banner"></div>
+
+  <!-- Active Filter Status Indicator -->
+  <div id="active-filter-banner" class="active-filter-banner" style="display: none;">
+    <div class="active-filter-content">
+      <span class="filter-icon">🔍</span>
+      <span id="active-filter-label">Filter Active:</span>
+      <strong id="active-filter-value" style="color: var(--accent-cyan);"></strong>
+      <span id="active-filter-count" class="filter-count-badge"></span>
+      <button id="btn-clear-active-filter" class="btn-clear-filter-pill" title="Clear Active Filter">✕ Clear</button>
+    </div>
+  </div>
+
+  <!-- Empty Filter Alert (Centered on Radar when 0 flights match) -->
+  <div id="empty-filter-alert" class="empty-filter-alert" style="display: none;">
+    <div class="empty-filter-card">
+      <div class="empty-filter-icon">✈️</div>
+      <div class="empty-filter-title">NO FLIGHTS MATCH CURRENT FILTER</div>
+      <div class="empty-filter-desc" id="empty-filter-reason">
+        No active aircraft match the selected filter criteria.
+      </div>
+      <div class="empty-filter-actions">
+        <button id="btn-empty-reset" class="cmd-btn btn-primary">
+          <span>🔄 Reset All Filters & Show All Flights</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Left Navigator Pad (Flight Corridors & Camera Tools) -->
+  <aside class="left-navigator">
+    <div class="nav-card">
+      <div class="nav-card-title">Flight Corridors</div>
+      <button class="corridor-btn active" data-region="global">Global View</button>
+      <button class="corridor-btn" data-region="north-america">North America</button>
+      <button class="corridor-btn" data-region="europe">Europe</button>
+      <button class="corridor-btn" data-region="east-asia">East Asia</button>
+      <button class="corridor-btn" data-region="middle-east">Middle East Hubs</button>
+      <button class="corridor-btn" data-region="transatlantic">Transatlantic</button>
+      <button class="corridor-btn" data-region="south-america">South America</button>
+      <button class="corridor-btn" data-region="oceania">Oceania</button>
+    </div>
+
+    <div class="nav-card" style="gap: 6px;">
+      <button id="btn-auto-rotate" class="cmd-btn" style="justify-content: center;" title="Radar Orbit Globe">
+        <span>🔄 Radar Orbit</span>
+      </button>
+      <button id="btn-toggle-night" class="cmd-btn active" style="justify-content: center;" title="Solar Day/Night Terminator">
+        <span>🌓 Day / Night</span>
+      </button>
+      <button id="btn-toggle-graticule" class="cmd-btn active" style="justify-content: center;" title="Lat/Lon Graticule">
+        <span>🌐 Graticule</span>
+      </button>
+      <div style="display: flex; gap: 4px;">
+        <button id="btn-zoom-in" class="cmd-btn" style="flex:1; justify-content: center;" title="Zoom In">➕</button>
+        <button id="btn-zoom-out" class="cmd-btn" style="flex:1; justify-content: center;" title="Zoom Out">➖</button>
+        <button id="btn-reset-view" class="cmd-btn" style="flex:1; justify-content: center;" title="Reset Camera">🎯</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Bottom Command Bar: Altitude Heatmap Spectrum & Airspace Telemetry -->
+  <footer class="bottom-command-bar">
+    <!-- Interactive Altitude Ribbon -->
+    <div class="altitude-ribbon" id="altitude-legend">
+      <div class="ribbon-label">ALTITUDE SPECTRUM</div>
+      <div class="ribbon-bands">
+        <div class="ribbon-band" data-band="low">
+          <span class="band-led" style="background: #10b981; box-shadow: 0 0 7px #10b981;"></span>
+          <span>&lt; 10k ft</span>
+          <span class="band-count" id="count-alt-low">--</span>
+        </div>
+        <div class="ribbon-band" data-band="mid">
+          <span class="band-led" style="background: #00f0ff; box-shadow: 0 0 7px #00f0ff;"></span>
+          <span>10k - 25k</span>
+          <span class="band-count" id="count-alt-mid">--</span>
+        </div>
+        <div class="ribbon-band" data-band="cruise">
+          <span class="band-led" style="background: #facc15; box-shadow: 0 0 7px #facc15;"></span>
+          <span>25k - 35k</span>
+          <span class="band-count" id="count-alt-cruise">--</span>
+        </div>
+        <div class="ribbon-band" data-band="high">
+          <span class="band-led" style="background: #ef4444; box-shadow: 0 0 7px #ef4444;"></span>
+          <span>35k - 40k</span>
+          <span class="band-count" id="count-alt-high">--</span>
+        </div>
+        <div class="ribbon-band" data-band="strat">
+          <span class="band-led" style="background: #a855f7; box-shadow: 0 0 7px #a855f7;"></span>
+          <span>&gt; 40k ft</span>
+          <span class="band-count" id="count-alt-strat">--</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Airspace Telemetry Averages -->
+    <div class="airspace-status-pill">
+      <div>
+        <span style="color: var(--text-dim); font-size: 0.65rem;">AVG CRUISE ALT: </span>
+        <strong id="stat-avg-alt" style="color: var(--text-pure);">--</strong>
+      </div>
+      <div style="width: 1px; height: 12px; background: rgba(255,255,255,0.12);"></div>
+      <div>
+        <span style="color: var(--text-dim); font-size: 0.65rem;">AVG SPEED: </span>
+        <strong id="stat-avg-spd" style="color: var(--text-pure);">--</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Right Drawer: Cockpit Telemetry Primary Flight Display (PFD) -->
+  <aside id="telemetry-drawer">
+    <!-- Header -->
+    <div class="drawer-header">
+      <div class="drawer-callsign-block">
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <span class="drawer-callsign" id="tel-callsign">--</span>
+          <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-dim);" id="tel-iata">--</span>
+        </div>
+        <div class="drawer-airline" id="tel-airline">Live Radar Tracking</div>
+      </div>
+      <button id="btn-close-telemetry" class="btn-close-drawer" title="Close Drawer">✕</button>
+    </div>
+
+    <!-- Body -->
+    <div class="drawer-body">
+      <!-- Live Status & Cache Tag -->
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <span class="status-badge badge-cruise" id="tel-status-badge">EN ROUTE</span>
+        <span class="cache-source-tag" id="tel-cache-tag" title="Route Verification Source">
+          <span class="cache-icon">📡</span> <span id="tel-cache-status">OpenSky Live Radar</span>
+        </span>
+      </div>
+
+      <!-- Origin / Destination Route Card -->
+      <div class="hud-card">
+        <div class="route-nodes">
+          <div class="airport-node">
+            <span class="apt-code" id="tel-org-code">--</span>
+            <span class="apt-city" id="tel-org-city">En Route</span>
+            <span style="font-size: 0.65rem; color: var(--text-dim);" id="tel-org-name">Live Radar Detection</span>
+            <span style="font-size: 0.68rem; color: var(--accent-emerald); margin-top: 2px;" id="tel-org-time">--</span>
+          </div>
+          <div class="flight-vector-arrow">
+            <span>➔</span>
+            <span style="font-size: 0.65rem; font-family: var(--font-mono); color: var(--text-dim);" id="tel-flight-duration">--</span>
+          </div>
+          <div class="airport-node dest">
+            <span class="apt-code" id="tel-dst-code">--</span>
+            <span class="apt-city" id="tel-dst-city">En Route</span>
+            <span style="font-size: 0.65rem; color: var(--text-dim);" id="tel-dst-name">Destination Pending</span>
+            <span style="font-size: 0.68rem; color: var(--accent-cyan); margin-top: 2px;" id="tel-dst-time">--</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div class="route-progress-bar">
+            <div class="progress-fill" id="tel-progress-fill" style="width: 0%;"></div>
+          </div>
+          <div class="progress-labels">
+            <span>FLIGHT PROGRESS: <strong id="tel-progress-val" style="color: var(--accent-cyan);">--</strong></span>
+            <span id="tel-dist-val">-- NM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cockpit Telemetry Grid -->
+      <div class="telemetry-grid">
+        <!-- Altitude -->
+        <div class="tel-gauge-card">
+          <span class="tel-label">ALTITUDE</span>
+          <span class="tel-value" id="tel-alt-ft">-- FT</span>
+          <span class="tel-sub" id="tel-alt-m">-- M</span>
+          <span class="tel-sub" id="tel-vert-rate" style="color: var(--accent-cyan); margin-top: 2px;">▶ LEVEL (0 FPM)</span>
+        </div>
+
+        <!-- Ground Speed -->
+        <div class="tel-gauge-card">
+          <span class="tel-label">GROUND SPEED</span>
+          <span class="tel-value" id="tel-spd-kts">-- KTS</span>
+          <span class="tel-sub" id="tel-spd-kmh">-- KM/H</span>
+          <span class="tel-sub" id="tel-spd-mach" style="color: var(--accent-emerald); margin-top: 2px;">Mach --</span>
+        </div>
+
+        <!-- Heading / Track -->
+        <div class="tel-gauge-card">
+          <span class="tel-label">TRUE TRACK / HEADING</span>
+          <span class="tel-value" id="tel-hdg-deg">--°</span>
+          <span class="tel-sub" id="tel-hdg-card">--</span>
+        </div>
+
+        <!-- Squawk Code -->
+        <div class="tel-gauge-card">
+          <span class="tel-label">SQUAWK CODE</span>
+          <span class="tel-value" id="tel-squawk">----</span>
+          <span class="tel-sub" id="tel-squawk-desc" style="color: var(--accent-emerald);">MODE-S TRANSPONDER</span>
+        </div>
+      </div>
+
+      <!-- Current GPS Coordinates -->
+      <div class="tel-gauge-card">
+        <span class="tel-label">CURRENT POSITION</span>
+        <span class="tel-value" style="font-size: 0.92rem;" id="tel-coords">--</span>
+      </div>
+
+      <!-- Aircraft Technical Specifications -->
+      <div class="hud-card">
+        <div class="specs-title">AIRCRAFT SPECIFICATIONS</div>
+        <div class="specs-row">
+          <span class="specs-row-label">Model:</span>
+          <span class="specs-row-val" id="tel-ac-model">Commercial Aircraft</span>
+        </div>
+        <div class="specs-row">
+          <span class="specs-row-label">ICAO Type:</span>
+          <span class="specs-row-val" id="tel-ac-type">--</span>
+        </div>
+        <div class="specs-row">
+          <span class="specs-row-label">Manufacturer:</span>
+          <span class="specs-row-val" id="tel-ac-mfr">--</span>
+        </div>
+        <div class="specs-row">
+          <span class="specs-row-label">Registration:</span>
+          <span class="specs-row-val" id="tel-ac-reg">--</span>
+        </div>
+        <div class="specs-row">
+          <span class="specs-row-label">Registered Owner:</span>
+          <span class="specs-row-val" id="tel-ac-owner">--</span>
+        </div>
+        <div class="specs-row">
+          <span class="specs-row-label">Passenger Capacity:</span>
+          <span class="specs-row-val" id="tel-ac-pax">--</span>
+        </div>
+        <div class="specs-row">
+          <span class="specs-row-label">Service Ceiling:</span>
+          <span class="specs-row-val" id="tel-ac-ceiling">--</span>
+        </div>
+
+        <div class="aircraft-photo-wrapper" id="tel-ac-photo-container">
+          <img id="tel-ac-photo" src="" alt="Aircraft Photo">
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="drawer-actions">
+        <button id="btn-track-flight" class="action-btn">
+          <span>🎯 Follow Flight</span>
+        </button>
+        <button id="btn-fit-route" class="action-btn">
+          <span>🌐 Route Arc</span>
+        </button>
+        <button id="btn-copy-telemetry" class="action-btn">
+          <span>📋 Copy Data</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Advanced Airspace Filter Modal -->
+  <div class="filter-modal-overlay" id="filter-modal">
+    <div class="filter-modal-card">
+      <div class="modal-header">
+        <span class="modal-title">ADVANCED AIRSPACE FILTERS</span>
+        <button id="btn-close-filter-modal" class="btn-close-drawer">✕</button>
+      </div>
+
+      <!-- Altitude Range Slider -->
+      <div class="filter-section">
+        <div class="filter-label">
+          <span>Minimum Altitude</span>
+          <strong id="val-min-alt" style="color: var(--accent-cyan);">0 FT</strong>
+        </div>
+        <input type="range" id="slider-min-alt" class="filter-slider" min="0" max="50000" step="1000" value="0">
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">
+          <span>Maximum Altitude</span>
+          <strong id="val-max-alt" style="color: var(--accent-cyan);">50,000+ FT</strong>
+        </div>
+        <input type="range" id="slider-max-alt" class="filter-slider" min="0" max="50000" step="1000" value="50000">
+      </div>
+
+      <!-- Airline Dropdown -->
+      <div class="filter-section">
+        <div class="filter-label">Filter by Airline</div>
+        <select id="airline-select-dropdown" class="airline-select">
+          <option value="">All Airlines (Global Network)</option>
+        </select>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="filter-section">
+        <div class="filter-label">Aviation Category</div>
+        <div class="category-pills">
+          <button class="category-pill active" data-category="all">All Traffic</button>
+          <button class="category-pill" data-category="commercial">Passenger Jet</button>
+          <button class="category-pill" data-category="cargo">Cargo / Freight</button>
+          <button class="category-pill" data-category="ga">General Aviation</button>
+          <button class="category-pill" data-category="mil">Military</button>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">
+        <button id="btn-reset-filters" class="cmd-btn">Reset All Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SQLite Route Cache Inspector Modal -->
+  <div id="cache-modal" class="filter-modal-overlay">
+    <div class="cache-modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🗄️ Local SQLite Flight Route Cache <span style="font-size: 0.72rem; color: var(--text-dim); font-weight: normal; margin-left: 6px;">(Read-Only DB Inspector)</span></span>
+        </div>
+        <button id="btn-close-cache" class="btn-close-drawer">&times;</button>
+      </div>
+
+      <div class="cache-modal-body">
+        <!-- Metrics summary grid -->
+        <div class="cache-stats-grid">
+          <div class="cache-stat-card">
+            <span class="cache-stat-label">TOTAL CACHED</span>
+            <strong class="cache-stat-value" id="cache-stat-total">0</strong>
+          </div>
+          <div class="cache-stat-card">
+            <span class="cache-stat-label">ACTIVE / FRESH</span>
+            <strong class="cache-stat-value text-emerald" id="cache-stat-active">0</strong>
+          </div>
+          <div class="cache-stat-card">
+            <span class="cache-stat-label">EXPIRED / STALE</span>
+            <strong class="cache-stat-value text-amber" id="cache-stat-expired">0</strong>
+          </div>
+          <div class="cache-stat-card">
+            <span class="cache-stat-label">API CALLS SAVED</span>
+            <strong class="cache-stat-value text-cyan" id="cache-stat-saved">0</strong>
+          </div>
+        </div>
+
+        <!-- Search and Action Bar -->
+        <div class="cache-toolbar">
+          <div class="search-wrapper" style="flex: 1;">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="cache-search-input" class="search-input" placeholder="Search cached callsign, airport, city...">
+          </div>
+          <button id="btn-refresh-cache" class="cmd-btn" title="Refresh cache table">
+            <span>🔄 Refresh</span>
+          </button>
+          <button id="btn-clear-cache-db" class="cmd-btn btn-danger" title="Clear SQLite Database">
+            <span>🗑️ Clear DB</span>
+          </button>
+        </div>
+
+        <!-- Cached Routes Table Container -->
+        <div class="cache-table-wrapper">
+          <table class="cache-table">
+            <thead>
+              <tr>
+                <th>FLIGHT</th>
+                <th>AIRLINE / AIRCRAFT</th>
+                <th>ROUTE</th>
+                <th>SCHEDULE / DURATION</th>
+                <th>LIFECYCLE STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="cache-table-body">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-dim); padding: 24px;">
+                  Loading SQLite cache database...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info & Radar Architecture Modal -->
+  <div id="info-modal" class="filter-modal-overlay">
+    <div class="info-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>ℹ️ AeroVector Architecture, Live Feeds & Radar Legend</span>
+        </div>
+        <button id="btn-close-info" class="btn-close-drawer">&times;</button>
+      </div>
+
+      <div class="info-content-body">
+        <!-- 2-Column Grid: Architecture & APIs -->
+        <div class="info-grid-2col">
+          <!-- Column 1: System Overview & Engine -->
+          <div class="info-card-box">
+            <div class="info-section-title">
+              <span>🚀 What We Built & How It Works</span>
+            </div>
+            <div class="info-feature-list">
+              <div class="info-feature-item">
+                <span>🎯</span>
+                <div>
+                  <strong>Real-Time 60 FPS Canvas Vector Engine:</strong>
+                  <div>Renders 6,000+ active aircraft simultaneously using custom high-performance vector math across both 3D Orthographic Globe and 2D Equirectangular projections with solar day/night terminator.</div>
+                </div>
+              </div>
+              <div class="info-feature-item">
+                <span>⚡</span>
+                <div>
+                  <strong>Dead-Reckoning Physics Interpolation:</strong>
+                  <div>Interpolates aircraft latitude, longitude, altitude, and heading smoothly in real time between 10-second ADS-B broadcasts for butter-smooth visual motion without stutter.</div>
+                </div>
+              </div>
+              <div class="info-feature-item">
+                <span>🗄️</span>
+                <div>
+                  <strong>Embedded SQLite Cache Architecture:</strong>
+                  <div>High-speed local SQLite database (<code>flights_cache.sqlite</code> with WAL mode) caches verified flight routes, schedule times, and aircraft specifications—saving 98%+ of external API calls and eliminating rate limits.</div>
+                </div>
+              </div>
+              <div class="info-feature-item">
+                <span>🧠</span>
+                <div>
+                  <strong>Intelligent Flight Lifecycle & Staleness:</strong>
+                  <div>Evaluates flight departure, landing timestamps, and query age to automatically reuse active flight legs while re-querying only after a flight lands or expires.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: Data Feeds & Aviation APIs -->
+          <div class="info-card-box">
+            <div class="info-section-title">
+              <span>📡 Aviation APIs & Data Feeds</span>
+            </div>
+            <div class="source-list">
+              <div class="source-item">
+                <div class="source-header">
+                  <span class="source-status live"></span>
+                  <strong>OpenSky Network</strong>
+                  <span class="api-badge-tag live">OAuth2 · Unlimited</span>
+                </div>
+                <p>Global Mode-S ADS-B transponder telemetry stream tracking 6,000+ airborne aircraft in real-time. Automatically filters out parked aircraft on airport gates.</p>
+              </div>
+
+              <div class="source-item">
+                <div class="source-header">
+                  <span class="source-status ready"></span>
+                  <strong>AirLabs Aviation GDS API</strong>
+                  <span class="api-badge-tag ondemand">On-Demand Schedule</span>
+                </div>
+                <p>On-demand commercial airline schedule verification for clicked flights. Smart candidate resolver translates ATC transponder callsigns (e.g. <code>IGO139V</code> ➔ <code>6E139</code>) to retrieve scheduled departure/arrival times, city names, and durations.</p>
+              </div>
+
+              <div class="source-item">
+                <div class="source-header">
+                  <span class="source-status ready"></span>
+                  <strong>OpenFlights Navigation Database</strong>
+                  <span class="api-badge-tag database">13.7k Airports · 5.8k Airlines</span>
+                </div>
+                <p>Offline database of 13,768 international airports with IATA/ICAO codes, runway coordinates, elevation, and 5,852 international airlines.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-Column Grid: Altitude Spectrum & Squawk / Controls -->
+        <div class="info-grid-2col">
+          <!-- Column 1: Altitude Spectrum & Verification Badges -->
+          <div class="info-card-box">
+            <div class="info-section-title">
+              <span>🎨 Radar Altitude Spectrum & Verification</span>
+            </div>
+            <div class="alt-legend-grid">
+              <div class="alt-legend-item"><span class="alt-dot" style="background:#10b981;"></span><strong>&lt; 10,000 FT</strong><span>Approach / Climb</span></div>
+              <div class="alt-legend-item"><span class="alt-dot" style="background:#00f0ff;"></span><strong>10k - 25k FT</strong><span>Mid-Airway Transition</span></div>
+              <div class="alt-legend-item"><span class="alt-dot" style="background:#facc15;"></span><strong>25k - 35k FT</strong><span>Standard Jet Cruise</span></div>
+              <div class="alt-legend-item"><span class="alt-dot" style="background:#ef4444;"></span><strong>35k - 40k FT</strong><span>High-Altitude Route</span></div>
+              <div class="alt-legend-item"><span class="alt-dot" style="background:#a855f7;"></span><strong>&gt; 40,000 FT</strong><span>Stratosphere / Ultra-Haul</span></div>
+            </div>
+            <div style="margin-top: 6px; display: flex; gap: 8px; font-size: 0.72rem; color: var(--text-muted);">
+              <span class="cache-source-tag cached">⚡ SQLite Cache (0 API Calls)</span>
+              <span class="cache-source-tag">🌐 AirLabs Verified</span>
+            </div>
+          </div>
+
+          <!-- Column 2: Emergency Squawks & Interaction Controls -->
+          <div class="info-card-box">
+            <div class="info-section-title">
+              <span>🚨 Transponder Squawks & Navigation Controls</span>
+            </div>
+            <div class="squawk-grid">
+              <div class="squawk-item emergency"><span class="code">7700</span><span>General Emergency</span></div>
+              <div class="squawk-item warning"><span class="code">7600</span><span>Lost Radio Comms</span></div>
+              <div class="squawk-item critical"><span class="code">7500</span><span>Unlawful Interference</span></div>
+            </div>
+
+            <div class="controls-list" style="margin-top: 4px;">
+              <div><kbd>Left Drag</kbd> Rotate Globe / Pan Map</div>
+              <div><kbd>Scroll Wheel</kbd> Smooth Dynamic Zoom</div>
+              <div><kbd>Click Aircraft</kbd> Lock Telemetry & Route</div>
+              <div><kbd>🗄️ Cache Button</kbd> Open SQLite DB Inspector</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full-Width Row: Top-Right Radar Status Badges & Degraded Modes Explained -->
+        <div class="info-card-box" style="margin-top: 12px;">
+          <div class="info-section-title">
+            <span>📡 Top-Right Radar Stream Indicators & Degraded States Explained</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 8px;">
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                <span class="pulse-dot" style="background: #10b981; box-shadow: 0 0 8px #10b981; width: 8px; height: 8px; border-radius: 50%;"></span>
+                <strong style="color: #10b981; font-size: 0.8rem;">LIVE (Green)</strong>
+              </div>
+              <p style="font-size: 0.72rem; color: var(--text-dim); margin: 0; line-height: 1.4;">
+                Active authenticated OpenSky Network feed. Broadcasts 6,000+ real-time aircraft every 120s with 60 FPS client dead-reckoning extrapolation.
+              </p>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                <span class="pulse-dot" style="background: #facc15; box-shadow: 0 0 8px #facc15; width: 8px; height: 8px; border-radius: 50%;"></span>
+                <strong style="color: #facc15; font-size: 0.8rem;">SNAPSHOT (429 Rate Limit)</strong>
+              </div>
+              <p style="font-size: 0.72rem; color: var(--text-dim); margin: 0; line-height: 1.4;">
+                Upstream OpenSky daily credit limit reached (HTTP 429). AeroVector automatically falls back to 7,500+ baseline aircraft with continuous velocity physics so work and testing are never blocked. Automatically upgrades back to LIVE once quota resets.
+              </p>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                <span class="pulse-dot" style="background: #38bdf8; box-shadow: 0 0 8px #38bdf8; width: 8px; height: 8px; border-radius: 50%;"></span>
+                <strong style="color: #38bdf8; font-size: 0.8rem;">RADAR HOLD</strong>
+              </div>
+              <p style="font-size: 0.72rem; color: var(--text-dim); margin: 0; line-height: 1.4;">
+                Radar feed stream temporarily paused or offline. Maintains last-known aircraft coordinates without discarding existing radar contacts.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Hover Radar Tooltip -->
+  <div id="radar-tooltip"></div>
+
+  <!-- Application Scripts -->
+  <script src="/js/audio.js?v=6"></script>
+  <script src="/js/solar.js?v=6"></script>
+  <script src="/js/api.js?v=6"></script>
+  <script src="/js/map.js?v=6"></script>
+  <script src="/js/flight-layer.js?v=6"></script>
+  <script src="/js/space-layer.js?v=6"></script>
+  <script src="/js/telemetry.js?v=6"></script>
+  <script src="/js/filters.js?v=6"></script>
+  <script src="/js/app.js?v=6"></script>
+</body>
+</html>

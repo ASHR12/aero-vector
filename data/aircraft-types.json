@@ -1,0 +1,542 @@
+{
+  "B737": {
+    "manufacturer": "Boeing",
+    "name": "737-700",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 149,
+    "cruiseKnots": 450,
+    "maxAlt": 41000
+  },
+  "B738": {
+    "manufacturer": "Boeing",
+    "name": "737-800",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 189,
+    "cruiseKnots": 453,
+    "maxAlt": 41000
+  },
+  "B739": {
+    "manufacturer": "Boeing",
+    "name": "737-900ER",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 220,
+    "cruiseKnots": 453,
+    "maxAlt": 41000
+  },
+  "B38M": {
+    "manufacturer": "Boeing",
+    "name": "737 MAX 8",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 210,
+    "cruiseKnots": 453,
+    "maxAlt": 41000
+  },
+  "B39M": {
+    "manufacturer": "Boeing",
+    "name": "737 MAX 9",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 220,
+    "cruiseKnots": 453,
+    "maxAlt": 41000
+  },
+  "B744": {
+    "manufacturer": "Boeing",
+    "name": "747-400",
+    "category": "Wide-body Jet",
+    "engines": "4 Jet",
+    "maxPax": 416,
+    "cruiseKnots": 490,
+    "maxAlt": 45100
+  },
+  "B748": {
+    "manufacturer": "Boeing",
+    "name": "747-8 Intercontinental",
+    "category": "Wide-body Jet",
+    "engines": "4 Jet",
+    "maxPax": 467,
+    "cruiseKnots": 493,
+    "maxAlt": 45100
+  },
+  "B752": {
+    "manufacturer": "Boeing",
+    "name": "757-200",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 239,
+    "cruiseKnots": 460,
+    "maxAlt": 42000
+  },
+  "B753": {
+    "manufacturer": "Boeing",
+    "name": "757-300",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 295,
+    "cruiseKnots": 460,
+    "maxAlt": 42000
+  },
+  "B762": {
+    "manufacturer": "Boeing",
+    "name": "767-200",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 255,
+    "cruiseKnots": 460,
+    "maxAlt": 43000
+  },
+  "B763": {
+    "manufacturer": "Boeing",
+    "name": "767-300ER",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 350,
+    "cruiseKnots": 460,
+    "maxAlt": 43000
+  },
+  "B764": {
+    "manufacturer": "Boeing",
+    "name": "767-400ER",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 375,
+    "cruiseKnots": 460,
+    "maxAlt": 43000
+  },
+  "B772": {
+    "manufacturer": "Boeing",
+    "name": "777-200ER",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 396,
+    "cruiseKnots": 482,
+    "maxAlt": 43100
+  },
+  "B77L": {
+    "manufacturer": "Boeing",
+    "name": "777-200LR",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 317,
+    "cruiseKnots": 482,
+    "maxAlt": 43100
+  },
+  "B77W": {
+    "manufacturer": "Boeing",
+    "name": "777-300ER",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 550,
+    "cruiseKnots": 482,
+    "maxAlt": 43100
+  },
+  "B788": {
+    "manufacturer": "Boeing",
+    "name": "787-8 Dreamliner",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 248,
+    "cruiseKnots": 488,
+    "maxAlt": 43000
+  },
+  "B789": {
+    "manufacturer": "Boeing",
+    "name": "787-9 Dreamliner",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 296,
+    "cruiseKnots": 488,
+    "maxAlt": 43000
+  },
+  "B78X": {
+    "manufacturer": "Boeing",
+    "name": "787-10 Dreamliner",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 336,
+    "cruiseKnots": 488,
+    "maxAlt": 41100
+  },
+  "A220": {
+    "manufacturer": "Airbus",
+    "name": "A220-100",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 135,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "BCS3": {
+    "manufacturer": "Airbus",
+    "name": "A220-300",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 160,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "A318": {
+    "manufacturer": "Airbus",
+    "name": "A318",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 132,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "A319": {
+    "manufacturer": "Airbus",
+    "name": "A319",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 160,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "A320": {
+    "manufacturer": "Airbus",
+    "name": "A320-200",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 180,
+    "cruiseKnots": 447,
+    "maxAlt": 39100
+  },
+  "A20N": {
+    "manufacturer": "Airbus",
+    "name": "A320neo",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 195,
+    "cruiseKnots": 447,
+    "maxAlt": 39800
+  },
+  "A321": {
+    "manufacturer": "Airbus",
+    "name": "A321-200",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 220,
+    "cruiseKnots": 447,
+    "maxAlt": 39800
+  },
+  "A21N": {
+    "manufacturer": "Airbus",
+    "name": "A321neo",
+    "category": "Narrow-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 244,
+    "cruiseKnots": 447,
+    "maxAlt": 39800
+  },
+  "A332": {
+    "manufacturer": "Airbus",
+    "name": "A330-200",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 406,
+    "cruiseKnots": 470,
+    "maxAlt": 41100
+  },
+  "A333": {
+    "manufacturer": "Airbus",
+    "name": "A330-300",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 440,
+    "cruiseKnots": 470,
+    "maxAlt": 41100
+  },
+  "A339": {
+    "manufacturer": "Airbus",
+    "name": "A330-900neo",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 460,
+    "cruiseKnots": 470,
+    "maxAlt": 41100
+  },
+  "A343": {
+    "manufacturer": "Airbus",
+    "name": "A340-300",
+    "category": "Wide-body Jet",
+    "engines": "4 Jet",
+    "maxPax": 440,
+    "cruiseKnots": 470,
+    "maxAlt": 41100
+  },
+  "A346": {
+    "manufacturer": "Airbus",
+    "name": "A340-600",
+    "category": "Wide-body Jet",
+    "engines": "4 Jet",
+    "maxPax": 475,
+    "cruiseKnots": 470,
+    "maxAlt": 41100
+  },
+  "A359": {
+    "manufacturer": "Airbus",
+    "name": "A350-900",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 440,
+    "cruiseKnots": 488,
+    "maxAlt": 43100
+  },
+  "A35K": {
+    "manufacturer": "Airbus",
+    "name": "A350-1000",
+    "category": "Wide-body Jet",
+    "engines": "2 Jet",
+    "maxPax": 480,
+    "cruiseKnots": 488,
+    "maxAlt": 43100
+  },
+  "A388": {
+    "manufacturer": "Airbus",
+    "name": "A380-800 Superjumbo",
+    "category": "Super Wide-body Jet",
+    "engines": "4 Jet",
+    "maxPax": 853,
+    "cruiseKnots": 490,
+    "maxAlt": 43000
+  },
+  "E170": {
+    "manufacturer": "Embraer",
+    "name": "E170",
+    "category": "Regional Jet",
+    "engines": "2 Jet",
+    "maxPax": 78,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "E75L": {
+    "manufacturer": "Embraer",
+    "name": "E175",
+    "category": "Regional Jet",
+    "engines": "2 Jet",
+    "maxPax": 88,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "E190": {
+    "manufacturer": "Embraer",
+    "name": "E190",
+    "category": "Regional Jet",
+    "engines": "2 Jet",
+    "maxPax": 114,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "E195": {
+    "manufacturer": "Embraer",
+    "name": "E195",
+    "category": "Regional Jet",
+    "engines": "2 Jet",
+    "maxPax": 124,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "E295": {
+    "manufacturer": "Embraer",
+    "name": "E195-E2",
+    "category": "Regional Jet",
+    "engines": "2 Jet",
+    "maxPax": 146,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "CRJ2": {
+    "manufacturer": "Bombardier",
+    "name": "CRJ-200",
+    "category": "Regional Jet",
+    "engines": "2 Jet",
+    "maxPax": 50,
+    "cruiseKnots": 420,
+    "maxAlt": 41000
+  },
+  "CRJ7": {
+    "manufacturer": "Bombardier",
+    "name": "CRJ-700",
+    "category": "Regional Jet",
+    "engines": "2 Jet",
+    "maxPax": 78,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "CRJ9": {
+    "manufacturer": "Bombardier",
+    "name": "CRJ-900",
+    "category": "Regional Jet",
+    "engines": "2 Jet",
+    "maxPax": 90,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "CRJX": {
+    "manufacturer": "Bombardier",
+    "name": "CRJ-1000",
+    "category": "Regional Jet",
+    "engines": "2 Jet",
+    "maxPax": 104,
+    "cruiseKnots": 447,
+    "maxAlt": 41000
+  },
+  "DH8D": {
+    "manufacturer": "De Havilland Canada",
+    "name": "Dash 8 Q400",
+    "category": "Turboprop",
+    "engines": "2 Turboprop",
+    "maxPax": 90,
+    "cruiseKnots": 360,
+    "maxAlt": 27000
+  },
+  "AT72": {
+    "manufacturer": "ATR",
+    "name": "ATR 72",
+    "category": "Turboprop",
+    "engines": "2 Turboprop",
+    "maxPax": 78,
+    "cruiseKnots": 280,
+    "maxAlt": 25000
+  },
+  "AT76": {
+    "manufacturer": "ATR",
+    "name": "ATR 72-600",
+    "category": "Turboprop",
+    "engines": "2 Turboprop",
+    "maxPax": 78,
+    "cruiseKnots": 280,
+    "maxAlt": 25000
+  },
+  "AT45": {
+    "manufacturer": "ATR",
+    "name": "ATR 42-500",
+    "category": "Turboprop",
+    "engines": "2 Turboprop",
+    "maxPax": 50,
+    "cruiseKnots": 290,
+    "maxAlt": 25000
+  },
+  "GLF5": {
+    "manufacturer": "Gulfstream",
+    "name": "G550",
+    "category": "Business Jet",
+    "engines": "2 Jet",
+    "maxPax": 19,
+    "cruiseKnots": 488,
+    "maxAlt": 51000
+  },
+  "GLF6": {
+    "manufacturer": "Gulfstream",
+    "name": "G650",
+    "category": "Business Jet",
+    "engines": "2 Jet",
+    "maxPax": 19,
+    "cruiseKnots": 516,
+    "maxAlt": 51000
+  },
+  "GLEX": {
+    "manufacturer": "Bombardier",
+    "name": "Global 6000/7500",
+    "category": "Business Jet",
+    "engines": "2 Jet",
+    "maxPax": 19,
+    "cruiseKnots": 510,
+    "maxAlt": 51000
+  },
+  "CL35": {
+    "manufacturer": "Bombardier",
+    "name": "Challenger 350",
+    "category": "Business Jet",
+    "engines": "2 Jet",
+    "maxPax": 10,
+    "cruiseKnots": 470,
+    "maxAlt": 45000
+  },
+  "CL60": {
+    "manufacturer": "Bombardier",
+    "name": "Challenger 604/650",
+    "category": "Business Jet",
+    "engines": "2 Jet",
+    "maxPax": 12,
+    "cruiseKnots": 470,
+    "maxAlt": 41000
+  },
+  "C56X": {
+    "manufacturer": "Cessna",
+    "name": "Citation Excel/XLS",
+    "category": "Business Jet",
+    "engines": "2 Jet",
+    "maxPax": 9,
+    "cruiseKnots": 441,
+    "maxAlt": 45000
+  },
+  "C700": {
+    "manufacturer": "Cessna",
+    "name": "Citation Longitude",
+    "category": "Business Jet",
+    "engines": "2 Jet",
+    "maxPax": 12,
+    "cruiseKnots": 483,
+    "maxAlt": 45000
+  },
+  "PC12": {
+    "manufacturer": "Pilatus",
+    "name": "PC-12",
+    "category": "Turboprop Single",
+    "engines": "1 Turboprop",
+    "maxPax": 9,
+    "cruiseKnots": 285,
+    "maxAlt": 30000
+  },
+  "PC24": {
+    "manufacturer": "Pilatus",
+    "name": "PC-24",
+    "category": "Business Jet",
+    "engines": "2 Jet",
+    "maxPax": 10,
+    "cruiseKnots": 440,
+    "maxAlt": 45000
+  },
+  "C172": {
+    "manufacturer": "Cessna",
+    "name": "172 Skyhawk",
+    "category": "Piston Single",
+    "engines": "1 Piston",
+    "maxPax": 4,
+    "cruiseKnots": 122,
+    "maxAlt": 14000
+  },
+  "C150": {
+    "manufacturer": "Cessna",
+    "name": "150/152",
+    "category": "Piston Single",
+    "engines": "1 Piston",
+    "maxPax": 2,
+    "cruiseKnots": 100,
+    "maxAlt": 14000
+  },
+  "P28A": {
+    "manufacturer": "Piper",
+    "name": "PA-28 Cherokee",
+    "category": "Piston Single",
+    "engines": "1 Piston",
+    "maxPax": 4,
+    "cruiseKnots": 125,
+    "maxAlt": 14000
+  },
+  "SR22": {
+    "manufacturer": "Cirrus",
+    "name": "SR22",
+    "category": "Piston Single",
+    "engines": "1 Piston",
+    "maxPax": 5,
+    "cruiseKnots": 183,
+    "maxAlt": 17500
+  }
+}
